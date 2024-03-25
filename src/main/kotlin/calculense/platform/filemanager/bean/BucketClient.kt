@@ -9,7 +9,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner
 @Component
 class BucketClient {
     private val accessKeyId="AKIA6GBMERFZE5Q2BSRW"
-    private val secretAccessKey=""
+    private val secretAccessKey="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"
     @Bean
     fun s3PreSignerBean():S3Presigner{
         val credentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey)

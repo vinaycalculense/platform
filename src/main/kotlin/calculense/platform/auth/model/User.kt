@@ -23,7 +23,8 @@ data class User(
         @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
         val createdDate: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
         @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-        val modifiedDate: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+        var modifiedDate: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
+        var credit:Int=0
 )
 
 fun getUserFromDTO(userDTO: UserDTO):User{

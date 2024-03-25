@@ -15,5 +15,6 @@ data class UserDTO(
                 message = "Password must be at least 8 characters long and contain at least one digit, one lowercase letter, and one uppercase letter"
         )
         val password:String,
-        val token:String?=null
+        val token:String?=null,
+        val credit:Int=0
 )

@@ -10,6 +10,7 @@ import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
@@ -17,6 +18,7 @@ import org.springframework.web.context.request.ServletRequestAttributes
 
 @Aspect
 @Component
+@Order(1)
 class UserAuthAspect {
 
     @Autowired
@@ -37,7 +39,7 @@ class UserAuthAspect {
         val claims = parseToken(token)
 
         if (!requiredRole.contains(claims["role"].toString().lowercase())) {
-            throw CalculenseException(errorMessage = "UnAuthorized", errorCode = 403)
+            throw CalculenseException(errorMessage = "UnAuthorized.", errorCode = 403)
         }
         val requestAttributes = RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes
         requestAttributes.setAttribute("user",userService.getUserById(claims["id"].toString().toLong()),1)
