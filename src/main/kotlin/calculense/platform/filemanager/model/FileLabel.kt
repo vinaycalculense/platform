@@ -10,5 +10,6 @@ data class FileLabel(
         var id:Long?,
         var name:String,
         val description:String,
-        val bucket:String
+        val bucket:String,
+        val appName:String
 )

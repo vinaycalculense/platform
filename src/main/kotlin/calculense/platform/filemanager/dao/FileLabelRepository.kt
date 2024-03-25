@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface FileLabelRepository:JpaRepository<FileLabel,Long> {
     fun findFileLabelByName(name:String):FileLabel?
     fun findFileLabelByNameIn(names:List<String>):List<FileLabel>
+
+    fun findFileLabelById(id:Long):FileLabel
 }

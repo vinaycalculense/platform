@@ -28,6 +28,7 @@ class UserAuthAspect {
     lateinit var userService: IUserService
 
     @Before("@annotation(calculense.platform.auth.annotation.RequiresRole)")
+    @Order(1)
     fun authorizeRole(joinPoint: JoinPoint) {
 
         val method = (joinPoint.signature as MethodSignature).method

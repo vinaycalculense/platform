@@ -39,11 +39,16 @@ class FileUploadService:IFileUploadService {
                 requestId=requestId,
                 labelId = it.id!!,
                 bucket = it.bucket,
-                key = requestId.toString(),
+                key = requestId.toString()+"-"+it.id,
                 userId = user.id!!
             )
            fileUploadRepository.save(fileUpload)
         }
         return FileUploadResponseDTO(requestId=requestId,urls=urls)
+    }
+
+    override fun getAppNameByRequestId(requestId: String): String {
+        val labelId= fileUploadRepository.findFirstByRequestId(UUID.fromString(requestId)).labelId
+        return fileLabelRepository.findFileLabelById(labelId).appName
     }
 }

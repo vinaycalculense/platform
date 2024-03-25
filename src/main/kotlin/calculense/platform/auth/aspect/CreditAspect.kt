@@ -1,9 +1,13 @@
 package calculense.platform.auth.aspect
 
+import calculense.platform.app.service.IAppService
 import calculense.platform.auth.annotation.Paid
 import calculense.platform.auth.service.IUserService
 import calculense.platform.auth.util.getRequestUser
 import calculense.platform.exception.CalculenseException
+import calculense.platform.filemanager.service.FileUploadService
+import calculense.platform.filemanager.service.IFileUploadService
+import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Aspect
@@ -21,14 +25,32 @@ class CreditAspect {
     @Autowired
     lateinit var userService: IUserService
 
+    @Autowired
+    lateinit var fileUploadService: IFileUploadService
+
+    @Autowired
+    lateinit var appService: IAppService
+
+    @Autowired
+    lateinit var request: HttpServletRequest
     @Before("@annotation(calculense.platform.auth.annotation.Paid)")
+    @Order(2)
     fun checkAmount(joinPoint: JoinPoint) {
-        val method = (joinPoint.signature as MethodSignature).method
-        val annotation = method.getAnnotation(Paid::class.java)
-        val requiredCreditAmount = annotation.creditAmount
+        val requestId= request.parameterMap["request_id"]?.get(0)?.toString()
+        val appName = fileUploadService.getAppNameByRequestId(requestId!!)
+        val creditRequired = appService.getAppByName(appName).credits
         val user = getRequestUser()
-        if(user.credit<requiredCreditAmount){
+        if(user.credit<creditRequired){
             throw CalculenseException(errorMessage = "Credit Limit Exhausted", errorCode = 429)
         }
+    }
+
+    @Before("@annotation(calculense.platform.auth.annotation.Paid)")
+    fun deductAmount(joinPoint: JoinPoint) {
+        val requestId= request.parameterMap["request_id"]?.get(0)?.toString()
+        val appName = fileUploadService.getAppNameByRequestId(requestId!!)
+        val creditRequired = appService.getAppByName(appName).credits
+        val user = getRequestUser()
+        userService.deductCredit(userId = user.id!!, creditAmount = creditRequired,requestId=requestId)
     }
 }
