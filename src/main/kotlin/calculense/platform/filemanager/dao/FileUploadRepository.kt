@@ -8,4 +8,6 @@ import java.util.UUID
 @Repository
 interface FileUploadRepository:JpaRepository<FileUpload,UUID> {
     fun findFirstByRequestId(requestId:UUID):FileUpload
+    fun findAllByRequestId(requestId:UUID):List<FileUpload>
+
 }

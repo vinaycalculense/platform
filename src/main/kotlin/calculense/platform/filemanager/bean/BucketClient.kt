@@ -1,15 +1,21 @@
 package calculense.platform.filemanager.bean
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 
 @Component
 class BucketClient {
-    private val accessKeyId="AKIA6GBMERFZE5Q2BSRW"
-    private val secretAccessKey="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"
+
+    @Value("\${aws.access.key}")
+    private lateinit var  accessKeyId: String
+
+    @Value("\${aws.secret.key}")
+    private lateinit var secretAccessKey: String
+
     @Bean
     fun s3PreSignerBean():S3Presigner{
         val credentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey)

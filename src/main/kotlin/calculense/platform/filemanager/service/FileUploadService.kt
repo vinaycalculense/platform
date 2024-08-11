@@ -34,12 +34,12 @@ class FileUploadService:IFileUploadService {
         val urls= mutableListOf<URL>()
         val user= getRequestUser()
         fileLabels.forEach {
-            urls.add(URL(label=it.name, url = generatePutUrl(s3PreSigner = s3PreSigner, bucket = it.bucket, key = requestId.toString())))
+            urls.add(URL(label=it.name, url = generatePutUrl(s3PreSigner = s3PreSigner, bucket = it.bucket, key = requestId.toString()+"-"+it.id+"."+fileUploadRequestDTO.format)))
             val fileUpload = FileUpload(
                 requestId=requestId,
                 labelId = it.id!!,
                 bucket = it.bucket,
-                key = requestId.toString()+"-"+it.id,
+                key = requestId.toString()+"-"+it.id+"."+fileUploadRequestDTO.format,
                 userId = user.id!!
             )
            fileUploadRepository.save(fileUpload)
@@ -51,4 +51,13 @@ class FileUploadService:IFileUploadService {
         val labelId= fileUploadRepository.findFirstByRequestId(UUID.fromString(requestId)).labelId
         return fileLabelRepository.findFileLabelById(labelId).appName
     }
+
+    override fun getFileUploadByRequestId(requestId: String): List<FileUpload> {
+       return fileUploadRepository.findAllByRequestId(UUID.fromString(requestId))
+    }
+
+    override fun upsert(fileUpload: FileUpload):FileUpload {
+        return fileUploadRepository.save(fileUpload)
+    }
+
 }

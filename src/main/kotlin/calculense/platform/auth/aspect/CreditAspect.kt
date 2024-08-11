@@ -10,6 +10,8 @@ import calculense.platform.filemanager.service.IFileUploadService
 import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.annotation.After
+import org.aspectj.lang.annotation.AfterReturning
+import org.aspectj.lang.annotation.AfterThrowing
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.reflect.MethodSignature
@@ -42,15 +44,18 @@ class CreditAspect {
         val user = getRequestUser()
         if(user.credit<creditRequired){
             throw CalculenseException(errorMessage = "Credit Limit Exhausted", errorCode = 429)
+        }else{
+            userService.deductCredit(userId = user.id!!, creditAmount = creditRequired,requestId=requestId)
         }
+
     }
 
-    @Before("@annotation(calculense.platform.auth.annotation.Paid)")
+    @AfterThrowing("@annotation(calculense.platform.auth.annotation.Paid)")
     fun deductAmount(joinPoint: JoinPoint) {
         val requestId= request.parameterMap["request_id"]?.get(0)?.toString()
         val appName = fileUploadService.getAppNameByRequestId(requestId!!)
         val creditRequired = appService.getAppByName(appName).credits
         val user = getRequestUser()
-        userService.deductCredit(userId = user.id!!, creditAmount = creditRequired,requestId=requestId)
+        userService.deductCredit(userId = user.id!!, creditAmount = -creditRequired,requestId=requestId)
     }
 }

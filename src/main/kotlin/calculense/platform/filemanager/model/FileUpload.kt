@@ -10,6 +10,8 @@ import jakarta.persistence.Table
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.UUID
+import javax.print.attribute.standard.JobKOctetsProcessed
+
 @Entity(name = "cl_file_upload")
 @Table(indexes = [Index(name = "cl_file_upload_request_id_index", columnList = "requestId")])
 data class FileUpload(
@@ -23,4 +25,5 @@ data class FileUpload(
         val userId:Long,
         @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
         val createdDate: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
+        var processed: Int=0
         )

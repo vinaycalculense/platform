@@ -19,4 +19,8 @@ class FileLabelService:IFileLabelService {
         fileLabel.name=fileLabel.name.uppercase()
         return fileLabelRepository.save(fileLabel)
     }
+
+    override fun getFileLabelByIDs(fileLabelIds: List<Long>): List<FileLabel> {
+        return fileLabelRepository.findFileLabelByIdIn(fileLabelIds)
+    }
 }
