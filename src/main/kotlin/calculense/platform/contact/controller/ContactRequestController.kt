@@ -1,7 +1,5 @@
 package calculense.platform.contact.controller
 
-import calculense.platform.app.model.App
-import calculense.platform.auth.annotation.RequiresRole
 import calculense.platform.contact.model.ContactRequest
 import calculense.platform.contact.service.IContactRequestService
 import calculense.platform.model.Response
