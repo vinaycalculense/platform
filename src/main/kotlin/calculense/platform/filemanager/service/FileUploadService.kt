@@ -8,10 +8,9 @@ import calculense.platform.filemanager.model.FileUpload
 import calculense.platform.filemanager.model.FileUploadRequestDTO
 import calculense.platform.filemanager.model.FileUploadResponseDTO
 import calculense.platform.filemanager.model.URL
-import calculense.platform.filemanager.util.generatePutUrl
+import calculense.platform.filemanager.util.FileUploadUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import java.util.UUID
 
 @Service
@@ -20,7 +19,7 @@ class FileUploadService:IFileUploadService {
     lateinit var fileLabelRepository: FileLabelRepository
 
     @Autowired
-    lateinit var s3PreSigner: S3Presigner
+    lateinit var fileUploadUtil: FileUploadUtil
 
     @Autowired
     lateinit var fileUploadRepository: FileUploadRepository
@@ -34,7 +33,7 @@ class FileUploadService:IFileUploadService {
         val urls= mutableListOf<URL>()
         val user= getRequestUser()
         fileLabels.forEach {
-            urls.add(URL(label=it.name, url = generatePutUrl(s3PreSigner = s3PreSigner, bucket = it.bucket, key = requestId.toString()+"-"+it.id+"."+fileUploadRequestDTO.format)))
+            urls.add(URL(label=it.name, url = fileUploadUtil.generatePutUrl(bucket = it.bucket, key = requestId.toString()+"-"+it.id+"."+fileUploadRequestDTO.format, duration = 10)))
             val fileUpload = FileUpload(
                 requestId=requestId,
                 labelId = it.id!!,
