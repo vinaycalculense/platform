@@ -30,6 +30,22 @@ class UserController {
         )
     }
 
+    @GetMapping
+    @RequiresRole(type = ["admin", "user"])
+    fun user(): ResponseEntity<Response<UserDTO>> {
+        val user = getRequestUser()
+        return ResponseEntity(
+            Response(data =  UserDTO(
+                firstName = user.firstName,
+                lastName = user.lastName,
+                email = user.email,
+                credit = user.credit,
+                password = ""
+            ), message = "User Created Successfully", error = false),
+            HttpStatus.CREATED
+        )
+    }
+
     @GetMapping("/txnlog")
     @RequiresRole(type = ["admin", "user"])
     fun txnLog(): ResponseEntity<Response<List<CreditLogs>>> {
@@ -48,7 +64,7 @@ class UserController {
         return ResponseEntity(
             Response(
                 data = userService.getRequestLogs(getRequestUser().id!!),
-                message = "User Credit Logs Fetched Successfully",
+                message = "User Request Logs Fetched Successfully",
                 error = false
             ), HttpStatus.OK
         )
@@ -60,7 +76,7 @@ class UserController {
         return ResponseEntity(
             Response(
                 data = userService.getRequestImage(getRequestUser().id!!, requestName),
-                message = "User Credit Logs Fetched Successfully",
+                message = "User Request  Fetched Successfully",
                 error = false
             ), HttpStatus.OK
         )

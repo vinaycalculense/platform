@@ -4,7 +4,6 @@ import jakarta.persistence.*
 
 @Entity(name = "cl_app")
 @Table(indexes = [Index(name = "cl_app_name_index", columnList = "name", unique = true)])
-
 data class App(
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
