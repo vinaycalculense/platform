@@ -12,9 +12,10 @@ data class CreditLogs(
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id:Long?,
-        val requestId:String,
+        val requestId:String?,
         val userId:Long,
         val amountDeducted:Int,
+        val description:String?=null,
         @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
         val createdDate: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
         @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

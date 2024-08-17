@@ -5,7 +5,6 @@ import calculense.platform.auth.dao.UserRepository
 import calculense.platform.auth.model.*
 import calculense.platform.auth.util.createToken
 import calculense.platform.auth.util.hashPassword
-import calculense.platform.auth.util.key
 import calculense.platform.exception.CalculenseException
 import calculense.platform.filemanager.service.IFileUploadService
 import calculense.platform.filemanager.util.FileUploadUtil
@@ -29,14 +28,16 @@ class UserService:IUserService {
     @Autowired
     lateinit var fileUploadUtil:FileUploadUtil
 
+    private val newUserCredit =50
+
     override fun signup(user: UserDTO): UserDTO {
        val existingUser = userRepository.findUserByEmail(user.email.lowercase())
        if(existingUser!=null){
            throw CalculenseException(errorMessage = "Email already Exists", errorCode = 400)
        }
         val newUser = getUserFromDTO(user)
-        newUser.credit=50
-        userRepository.save(newUser)
+        val savedUser = userRepository.save(newUser)
+        deductCredit(savedUser.id!!,-newUserCredit,null, description = "Sign up bonus credited")
         return UserDTO(firstName = newUser.firstName,
                 lastName = newUser.lastName,
                 password = "",
@@ -69,7 +70,7 @@ class UserService:IUserService {
     }
 
     @Transactional
-    override fun deductCredit(userId: Long,creditAmount:Int, requestId:String){
+    override fun deductCredit(userId: Long, creditAmount: Int, requestId: String?, description:String?) {
         val user = userRepository.findUserById(userId)
         if (user != null) {
             if(user.credit<creditAmount){
@@ -80,7 +81,8 @@ class UserService:IUserService {
                             id = null,
                             amountDeducted = creditAmount,
                             requestId = requestId,
-                            userId = user.id!!
+                            userId = user.id!!,
+                            description = description
                     )
             )
             user.credit -= creditAmount
