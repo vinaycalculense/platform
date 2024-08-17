@@ -1,5 +1,6 @@
 package calculense.platform.filemanager.service
 
+import calculense.platform.auth.util.getRequestUser
 import calculense.platform.auth.util.key
 import calculense.platform.filemanager.dao.SampleRepository
 import calculense.platform.filemanager.model.Sample
@@ -21,8 +22,8 @@ class SampleService:ISampleService {
         return sampleRepository.save(sample)
     }
 
-    override fun getSamples(userId:Long,category:String):List<Sample>{
-        val samples = sampleRepository.findByCategoryAndUserIdIsNullOrUserId(category, userId)
+    override fun getSamples(category:String):List<Sample>{
+        val samples = sampleRepository.findByCategoryAndUserIdIsNullOrUserId(category, getRequestUser().id!!)
         samples.forEach {
             it.sampleFiles.forEach { it1 ->
                 it1.url= fileUploadUtil.generateGetUrl(bucket = it1.bucket, key=it1.key, duration = 300)

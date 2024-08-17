@@ -22,7 +22,7 @@ class CatalogueProcessExecutor:ProcessExecutor {
     @Autowired
     lateinit var messageSender: MessageSender
 
-    override fun process(requestId: String) {
+    override fun process(requestId: String, requestName:String) {
         val fileUploads= fileUploadService.getFileUploadByRequestId(requestId)
         val processedUpload = fileUploads.find { it.processed==1 || it.processed==2 }
         if(processedUpload!=null){
@@ -66,6 +66,7 @@ class CatalogueProcessExecutor:ProcessExecutor {
         catalogueRequests.forEach { messageSender.sendMessage(it) }
         fileUploads.forEach{
             it.processed=1
+            it.requestName=requestName
             fileUploadService.upsert(it)
         }
     }

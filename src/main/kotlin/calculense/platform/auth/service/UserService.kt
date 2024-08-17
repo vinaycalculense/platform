@@ -5,10 +5,12 @@ import calculense.platform.auth.dao.UserRepository
 import calculense.platform.auth.model.*
 import calculense.platform.auth.util.createToken
 import calculense.platform.auth.util.hashPassword
+import calculense.platform.auth.util.key
 import calculense.platform.exception.CalculenseException
+import calculense.platform.filemanager.service.IFileUploadService
+import calculense.platform.filemanager.util.FileUploadUtil
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -20,6 +22,12 @@ class UserService:IUserService {
 
     @Autowired
     lateinit var creditLogsRepository: CreditLogsRepository
+
+    @Autowired
+    lateinit var fileUploadService: IFileUploadService
+
+    @Autowired
+    lateinit var fileUploadUtil:FileUploadUtil
 
     override fun signup(user: UserDTO): UserDTO {
        val existingUser = userRepository.findUserByEmail(user.email.lowercase())
@@ -80,6 +88,46 @@ class UserService:IUserService {
             userRepository.save(user)
         }
 
+    }
+
+    override fun getCreditLogs(userId:Long):List<CreditLogs>{
+        return creditLogsRepository.findByUserId(userId)
+    }
+
+    override fun getRequestLogs(userId: Long):List<UserRequestDTO>{
+        val userRequests= mutableListOf<UserRequestDTO>()
+        val uploads = fileUploadService.getFileUploadByUserId(userId).filter { it.processed==2}
+        val uploadByRequestName = uploads.groupBy { it.requestName }
+
+        uploadByRequestName.forEach {
+            val latestUpload= it.value.maxBy { it1 -> it1.createdDate }
+            userRequests.add(
+                UserRequestDTO(
+                    requestName = it.key!!,
+                    latestDate = latestUpload.createdDate,
+                    url = fileUploadUtil.generateGetUrl(bucket = latestUpload.outputBucket!!,key=latestUpload.outputKey!!, duration = 300)
+
+                )
+            )
+        }
+        return userRequests
+    }
+
+    override fun getRequestImage(userId: Long, requestName:String):List<UserRequestDTO>{
+        val userRequests= mutableListOf<UserRequestDTO>()
+        val uploads = fileUploadService.getFileUploadByUserIdAndRequestName(userId,requestName).filter { it.processed==2}
+
+        uploads.forEach {
+            userRequests.add(
+                UserRequestDTO(
+                    requestName = it.requestName!!,
+                    latestDate = it.createdDate,
+                    url = fileUploadUtil.generateGetUrl(bucket = it.outputBucket!!,key=it.outputKey!!, duration = 300)
+
+                )
+            )
+        }
+        return userRequests
     }
 
 }

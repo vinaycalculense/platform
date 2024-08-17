@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface CreditLogsRepository:JpaRepository<CreditLogs,Long?> {
+    fun findByUserId(userId:Long):List<CreditLogs>
 }

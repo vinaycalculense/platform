@@ -1,20 +1,15 @@
 package calculense.platform.auth.aspect
 
 import calculense.platform.app.service.IAppService
-import calculense.platform.auth.annotation.Paid
 import calculense.platform.auth.service.IUserService
 import calculense.platform.auth.util.getRequestUser
 import calculense.platform.exception.CalculenseException
-import calculense.platform.filemanager.service.FileUploadService
 import calculense.platform.filemanager.service.IFileUploadService
 import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.JoinPoint
-import org.aspectj.lang.annotation.After
-import org.aspectj.lang.annotation.AfterReturning
 import org.aspectj.lang.annotation.AfterThrowing
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
-import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component

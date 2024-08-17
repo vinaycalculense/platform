@@ -9,5 +9,6 @@ import java.util.UUID
 interface FileUploadRepository:JpaRepository<FileUpload,UUID> {
     fun findFirstByRequestId(requestId:UUID):FileUpload
     fun findAllByRequestId(requestId:UUID):List<FileUpload>
-
+    fun findAllByUserId(userId:Long):List<FileUpload>
+    fun findAllByUserIdAndRequestName(userId:Long,requestName:String):List<FileUpload>
 }

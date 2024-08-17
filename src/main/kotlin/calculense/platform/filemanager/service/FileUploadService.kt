@@ -55,6 +55,14 @@ class FileUploadService:IFileUploadService {
        return fileUploadRepository.findAllByRequestId(UUID.fromString(requestId))
     }
 
+    override fun getFileUploadByUserId(userId: Long): List<FileUpload> {
+        return fileUploadRepository.findAllByUserId(userId)
+    }
+
+    override fun getFileUploadByUserIdAndRequestName(userId: Long, requestName:String): List<FileUpload> {
+        return fileUploadRepository.findAllByUserIdAndRequestName(userId,requestName)
+    }
+
     override fun upsert(fileUpload: FileUpload):FileUpload {
         return fileUploadRepository.save(fileUpload)
     }

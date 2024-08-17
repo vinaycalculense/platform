@@ -36,9 +36,9 @@ class SampleController {
 
     @GetMapping
     @RequiresRole(["user","admin"])
-    fun getSample(@RequestParam("userId") userId:Long,@RequestParam("category") category:String): ResponseEntity<Response<List<Sample>>> {
+    fun getSample(@RequestParam("category") category:String): ResponseEntity<Response<List<Sample>>> {
         return ResponseEntity(
-            Response(data=sampleService.getSamples(userId,category), message = "request processed", error = false),
+            Response(data=sampleService.getSamples(category), message = "request processed", error = false),
             HttpStatus.OK)
     }
 }

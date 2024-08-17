@@ -19,8 +19,8 @@ class ProcessController {
     @PostMapping
     @RequiresRole(type = ["user","admin"])
     @Paid
-    fun processRequest(@RequestParam("request_id") requestId:String ): ResponseEntity<Response<String>> {
-        processExecutor.process(requestId)
+    fun processRequest(@RequestParam("requestId") requestId:String,@RequestParam("requestName") requestName:String ): ResponseEntity<Response<String>> {
+        processExecutor.process(requestId, requestName)
         return ResponseEntity(Response(data = requestId, message = "Request Submitted.", error = false),
             HttpStatus.CREATED)
 

@@ -13,7 +13,10 @@ import java.util.UUID
 import javax.print.attribute.standard.JobKOctetsProcessed
 
 @Entity(name = "cl_file_upload")
-@Table(indexes = [Index(name = "cl_file_upload_request_id_index", columnList = "requestId")])
+@Table(indexes = [Index(name = "cl_file_upload_request_id_index", columnList = "requestId"),
+        Index(name = "cl_file_upload_user_id_index", columnList = "userId"),
+        Index(name = "cl_file_upload_created_date_index", columnList = "createdDate")
+])
 data class FileUpload(
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,5 +28,9 @@ data class FileUpload(
         val userId:Long,
         @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
         val createdDate: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC")),
-        var processed: Int=0
+        var processed: Int=0,
+        var requestName: String?=null,
+        var outputBucket:String?=null,
+        var outputKey:String?=null,
+        val outputDate: LocalDateTime? = null,
         )

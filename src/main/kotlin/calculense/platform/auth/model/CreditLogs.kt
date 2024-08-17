@@ -5,7 +5,9 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 @Entity(name = "cl_credit_logs")
-@Table(indexes = [Index(name = "cl_credit_logs_user_id_index", columnList = "userId", unique = false)])
+@Table(indexes = [Index(name = "cl_credit_logs_user_id_index", columnList = "userId", unique = false),
+        Index(name = "cl_credit_logs_created_date_index", columnList = "createdDate")
+])
 data class CreditLogs(
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
