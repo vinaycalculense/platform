@@ -41,7 +41,7 @@ class UserController {
                 email = user.email,
                 credit = user.credit,
                 password = ""
-            ), message = "User Created Successfully", error = false),
+            ), message = "User Fetched Successfully", error = false),
             HttpStatus.CREATED
         )
     }

@@ -12,4 +12,5 @@ interface IFileUploadService {
     fun upsert(fileUpload: FileUpload): FileUpload
     fun getFileUploadByUserId(userId: Long): List<FileUpload>
     fun getFileUploadByUserIdAndRequestName(userId: Long, requestName: String): List<FileUpload>
+    fun downloadImage(uri: String): ByteArray
 }

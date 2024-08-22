@@ -11,6 +11,8 @@ import calculense.platform.filemanager.model.URL
 import calculense.platform.filemanager.util.FileUploadUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.net.HttpURLConnection
+import java.net.URI
 import java.util.UUID
 
 @Service
@@ -65,6 +67,15 @@ class FileUploadService:IFileUploadService {
 
     override fun upsert(fileUpload: FileUpload):FileUpload {
         return fileUploadRepository.save(fileUpload)
+    }
+
+    override fun downloadImage(uri: String): ByteArray {
+        val url = URI.create(uri).toURL()
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "GET"
+        connection.inputStream.use { inputStream ->
+            return inputStream.readBytes()
+        }
     }
 
 }

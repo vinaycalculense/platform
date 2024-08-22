@@ -21,4 +21,12 @@ class FileUploadController {
     fun processUpload(@RequestBody fileUploadRequestDTO: FileUploadRequestDTO): ResponseEntity<Response<FileUploadResponseDTO>> {
         return ResponseEntity(Response(data=fileUploadService.processUpload(fileUploadRequestDTO), message = "request processed", error = false),HttpStatus.CREATED)
     }
+
+    @GetMapping("/get")
+    @RequiresRole(["user","admin"])
+    fun getFile(@RequestParam("fileURL") fileUrl: String): ResponseEntity<Response<ByteArray>> {
+        return ResponseEntity(Response(data=fileUploadService.downloadImage(fileUrl), message = "request processed", error = false),HttpStatus.CREATED)
+    }
+
+
 }
