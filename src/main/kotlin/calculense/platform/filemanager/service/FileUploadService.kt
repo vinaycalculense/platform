@@ -69,12 +69,41 @@ class FileUploadService:IFileUploadService {
         return fileUploadRepository.save(fileUpload)
     }
 
-    override fun downloadImage(uri: String): ByteArray {
-        val url = URI.create(uri).toURL()
+
+    override fun copyImage(getUrl: String, putUrl: String) {
+        // Open a connection to the GET URL and download the image
+        val imageBytes = downloadImageFromGetUrl(getUrl)
+
+        // Upload the downloaded image bytes to the PUT URL
+        uploadImageToPutUrl(putUrl, imageBytes)
+    }
+
+    private fun downloadImageFromGetUrl(getUrl: String): ByteArray {
+        val url = URI.create(getUrl).toURL()
         val connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
+        connection.doInput = true
+
         connection.inputStream.use { inputStream ->
             return inputStream.readBytes()
+        }
+    }
+
+    private fun uploadImageToPutUrl(putUrl: String, imageBytes: ByteArray) {
+        val url = URI.create(putUrl).toURL()
+        val connection = url.openConnection() as HttpURLConnection
+        connection.requestMethod = "PUT"
+        connection.doOutput = true
+        connection.setRequestProperty("Content-Type", "image/jpeg") // Adjust content type as needed
+
+        connection.outputStream.use { outputStream ->
+            outputStream.write(imageBytes)
+        }
+
+        // Check response code to ensure the upload was successful
+        val responseCode = connection.responseCode
+        if (responseCode != HttpURLConnection.HTTP_OK && responseCode != HttpURLConnection.HTTP_CREATED) {
+            throw RuntimeException("Failed to upload image. Response code: $responseCode")
         }
     }
 

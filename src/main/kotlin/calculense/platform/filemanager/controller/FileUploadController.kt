@@ -1,6 +1,7 @@
 package calculense.platform.filemanager.controller
 
 import calculense.platform.auth.annotation.RequiresRole
+import calculense.platform.filemanager.model.CopyRequest
 import calculense.platform.filemanager.model.FileUploadRequestDTO
 import calculense.platform.filemanager.model.FileUploadResponseDTO
 import calculense.platform.filemanager.service.IFileUploadService
@@ -22,10 +23,11 @@ class FileUploadController {
         return ResponseEntity(Response(data=fileUploadService.processUpload(fileUploadRequestDTO), message = "request processed", error = false),HttpStatus.CREATED)
     }
 
-    @GetMapping("/get")
+    @PostMapping("/copy")
     @RequiresRole(["user","admin"])
-    fun getFile(@RequestParam("fileURL") fileUrl: String): ResponseEntity<Response<ByteArray>> {
-        return ResponseEntity(Response(data=fileUploadService.downloadImage(fileUrl), message = "request processed", error = false),HttpStatus.CREATED)
+    fun getFile(@RequestBody copyRequest: CopyRequest): ResponseEntity<Response<String>> {
+        fileUploadService.copyImage(copyRequest.getUrl,copyRequest.putUrl)
+        return ResponseEntity(Response(data="File Copied", message = "request processed", error = false),HttpStatus.CREATED)
     }
 
 
