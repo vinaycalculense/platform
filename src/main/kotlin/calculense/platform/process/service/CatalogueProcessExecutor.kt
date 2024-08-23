@@ -36,6 +36,7 @@ class CatalogueProcessExecutor:ProcessExecutor {
                 if(fileUploadMapByLabels.contains("MODEL_BACK")){
                     val modelUpload = fileUploadMapByLabels["MODEL_BACK"]!!
                     val request = CatalogueRequest(
+                        requestId= it.value.key.split(".")[0],
                         clothLocation = "s3://${it.value.bucket}/${it.value.key}",
                         modelLocation = "s3://${modelUpload.bucket}/${modelUpload.key}",
                         clothLabel = fileLabels[it.value.labelId]!!.name,
@@ -50,6 +51,7 @@ class CatalogueProcessExecutor:ProcessExecutor {
                 if(fileUploadMapByLabels.contains("MODEL_FRONT")){
                     val modelUpload = fileUploadMapByLabels["MODEL_FRONT"]!!
                     val request = CatalogueRequest(
+                        requestId= it.value.key.split(".")[0],
                         clothLocation = "s3://${it.value.bucket}/${it.value.key}",
                         modelLocation = "s3://${modelUpload.bucket}/${modelUpload.key}",
                         clothLabel = fileLabels[it.value.labelId]!!.name,

@@ -40,7 +40,7 @@ class FileUploadService:IFileUploadService {
                 requestId=requestId,
                 labelId = it.id!!,
                 bucket = it.bucket,
-                key = requestId.toString()+"-"+it.id+"."+fileUploadRequestDTO.format,
+                key = requestId.toString()+"_"+it.id+"."+fileUploadRequestDTO.format,
                 userId = user.id!!
             )
            fileUploadRepository.save(fileUpload)
