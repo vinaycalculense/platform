@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.sqs.SqsClient
 import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
+import java.util.UUID
 
 
 @Service
@@ -37,26 +38,37 @@ class Consumer {
             if (receiveMessageResult.hasMessages()) {
                 val messages = receiveMessageResult.messages()
                  messages.forEach { it ->
-
                      val m = it.body()
-                     val map = objectMapper.readValue(m.toString(),Map::class.java)
-
-                     val uploads= fileUploadService.getFileUploadByRequestId(map["request_id"].toString().split("_")[0])
-                     uploads.forEach{ u->
-                         if(u.key.contains(map["request_id"].toString())){
-                             u.processed=2
-                             u.outputKey= map["response_url"].toString().split("/")[3] + "/" +map["response_url"].toString().split("/")[4]
-                             u.outputBucket= map["response_url"].toString().split("/")[2]
-                             fileUploadService.upsert(u)
+                     val correctedJsonString = m.toString().replace("'", "\"")
+                     val map = objectMapper.readValue(correctedJsonString,Map::class.java)
+                     if (map.contains("request_id") && map.contains("response_url"))
+                     {
+                         var valid=false
+                         try{
+                             UUID.fromString(map["request_id"].toString().split("_")[0])
+                             valid=true
+                         }catch(_:Exception){}
+                         if(valid) {
+                             val uploads =
+                                 fileUploadService.getFileUploadByRequestId(map["request_id"].toString().split("_")[0])
+                             uploads.forEach { u ->
+                                 if (u.key.contains(map["request_id"].toString())) {
+                                     u.processed = 2
+                                     u.outputKey = map["response_url"].toString()
+                                         .split("/")[3] + "/" + map["response_url"].toString().split("/")[4].trim()
+                                     u.outputBucket = map["response_url"].toString().split("/")[2].trim()
+                                     fileUploadService.upsert(u)
+                                 }
+                             }
                          }
                      }
-                     sqsClient.deleteMessage { deleteRequest ->
+                    sqsClient.deleteMessage { deleteRequest ->
                          deleteRequest.queueUrl(queueUrl).receiptHandle(it.receiptHandle())
                      }
                  }
             }
         } catch (e: Exception) {
-            println("Error while consuingoutput messgae")
+            println("Error while consuming messages")
         }
     }
 }

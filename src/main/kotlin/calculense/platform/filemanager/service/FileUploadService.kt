@@ -35,7 +35,7 @@ class FileUploadService:IFileUploadService {
         val urls= mutableListOf<URL>()
         val user= getRequestUser()
         fileLabels.forEach {
-            urls.add(URL(label=it.name, url = fileUploadUtil.generatePutUrl(bucket = it.bucket, key = requestId.toString()+"-"+it.id+"."+fileUploadRequestDTO.format, duration = 10)))
+            urls.add(URL(label=it.name, url = fileUploadUtil.generatePutUrl(bucket = it.bucket, key = requestId.toString()+"_"+it.id+"."+fileUploadRequestDTO.format, duration = 10)))
             val fileUpload = FileUpload(
                 requestId=requestId,
                 labelId = it.id!!,
