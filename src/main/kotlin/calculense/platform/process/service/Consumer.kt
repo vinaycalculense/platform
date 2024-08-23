@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service
 import software.amazon.awssdk.services.sqs.SqsClient
 import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
 import software.amazon.awssdk.services.sqs.model.ReceiveMessageRequest
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.UUID
 
 
@@ -57,6 +59,7 @@ class Consumer {
                                      u.outputKey = map["response_url"].toString()
                                          .split("/")[3] + "/" + map["response_url"].toString().split("/")[4].trim()
                                      u.outputBucket = map["response_url"].toString().split("/")[2].trim()
+                                     u.outputDate = LocalDateTime.now(ZoneId.of("UTC"))
                                      fileUploadService.upsert(u)
                                  }
                              }

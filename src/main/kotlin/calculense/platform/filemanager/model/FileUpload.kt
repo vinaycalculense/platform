@@ -32,5 +32,5 @@ data class FileUpload(
         var requestName: String?=null,
         var outputBucket:String?=null,
         var outputKey:String?=null,
-        val outputDate: LocalDateTime? = null,
+        var outputDate: LocalDateTime? = null,
         )
