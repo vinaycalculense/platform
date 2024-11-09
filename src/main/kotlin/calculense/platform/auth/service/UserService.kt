@@ -36,6 +36,7 @@ class UserService:IUserService {
            throw CalculenseException(errorMessage = "Email already Exists", errorCode = 400)
        }
         val newUser = getUserFromDTO(user)
+        newUser = getUserFromDTO(user)
         val savedUser = userRepository.save(newUser)
         deductCredit(savedUser.id!!,-newUserCredit,null, description = "Sign up bonus credited")
         return UserDTO(firstName = newUser.firstName,
