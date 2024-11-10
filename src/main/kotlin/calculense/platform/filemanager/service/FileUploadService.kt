@@ -49,7 +49,7 @@ class FileUploadService:IFileUploadService {
     }
 
     override fun getAppNameByRequestId(requestId: String): String {
-        val labelId= fileUploadRepository.findFirstByRequestId(UUID.fromString(requestId)).labelId
+        val label_idd= fileUploadRepository.findFirstByRequestId(UUID.fromString(requestId)).labelId
         return fileLabelRepository.findFileLabelById(labelId).appName
     }
 
