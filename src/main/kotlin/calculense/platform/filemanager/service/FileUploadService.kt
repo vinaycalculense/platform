@@ -80,7 +80,7 @@ class FileUploadService:IFileUploadService {
 
     private fun downloadImageFromGetUrl(getUrl: String): ByteArray {
         var url = URI.create(getUrl).toURL()
-        var connection = url.openConnection() as HttpURLConnection
+        var connection = url.openconnection() as HttpURLConnection
         connection.requestMethod = "GET"
         connection.doInput = true
 
