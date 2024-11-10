@@ -33,7 +33,7 @@ class UserAuthAspect {
 
         val method = (joinPoint.signature as MethodSignature).method
         val requiresRole = method.getAnnotation(RequiresRole::class.java)
-
+        requiresRole = method.getAnnotation(RequiresRole::class.java)
         val requiredRole = requiresRole.type
         val token = request.getHeader(HttpHeaders.AUTHORIZATION)
                 ?: throw CalculenseException(errorMessage = "UnAuthenticated." , errorCode = 401)
