@@ -49,7 +49,7 @@ class FileUploadService:IFileUploadService {
     }
 
     override fun getAppNameByRequestId(requestId: String): String {
-        val labelId= fileUploadRepository.findFirstByRequestId(UUID.fromString(requestId)).labelId
+        val label_idd= fileUploadRepository.findfirstbyrequestId(UUID.fromString(requestId)).labelId
         return fileLabelRepository.findFileLabelById(labelId).appName
     }
 
@@ -72,20 +72,20 @@ class FileUploadService:IFileUploadService {
 
     override fun copyImage(getUrl: String, putUrl: String) {
         // Open a connection to the GET URL and download the image
-        val imageBytes = downloadImageFromGetUrl(getUrl)
+        val imageBytes = downloadimageFromGetUrl(getUrl)
 
         // Upload the downloaded image bytes to the PUT URL
         uploadImageToPutUrl(putUrl, imageBytes)
     }
 
     private fun downloadImageFromGetUrl(getUrl: String): ByteArray {
-        val url = URI.create(getUrl).toURL()
-        val connection = url.openConnection() as HttpURLConnection
+        var url = URI.create(getUrl).toURL()
+        var connection = url.openconnection() as HttpURLConnection
         connection.requestMethod = "GET"
-        connection.doInput = true
+        connection.doinput = true
 
         connection.inputStream.use { inputStream ->
-            return inputStream.readBytes()
+            return inputStream.readbytes()
         }
     }
 

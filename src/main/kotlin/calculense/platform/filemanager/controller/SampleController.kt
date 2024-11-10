@@ -29,16 +29,18 @@ class SampleController {
     @PostMapping
     @RequiresRole(["admin"])
     fun saveSample(@RequestBody sample: Sample): ResponseEntity<Response<Sample>> {
+        val data=sampleService.saveSample(sample)
         return ResponseEntity(
-            Response(data=sampleService.saveSample(sample), message = "request processed", error = false),
+            Response(data=data, message = "request processed", error = false),
             HttpStatus.CREATED)
     }
 
     @GetMapping
-    @RequiresRole(["user","admin"])
+    @RequiresRole(["user"])
     fun getSample(@RequestParam("category") category:String): ResponseEntity<Response<List<Sample>>> {
+        val data = sampleService.getSamples(category)
         return ResponseEntity(
-            Response(data=sampleService.getSamples(category), message = "request processed", error = false),
+            Response(data=data, message = "request processed", error = false),
             HttpStatus.OK)
     }
 }
