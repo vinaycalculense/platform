@@ -79,8 +79,8 @@ class FileUploadService:IFileUploadService {
     }
 
     private fun downloadImageFromGetUrl(getUrl: String): ByteArray {
-        val url = URI.create(getUrl).toURL()
-        val connection = url.openConnection() as HttpURLConnection
+        var url = URI.create(getUrl).toURL()
+        var connection = url.openConnection() as HttpURLConnection
         connection.requestMethod = "GET"
         connection.doInput = true
 
