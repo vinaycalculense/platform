@@ -72,7 +72,7 @@ class FileUploadService:IFileUploadService {
 
     override fun copyImage(getUrl: String, putUrl: String) {
         // Open a connection to the GET URL and download the image
-        val imageBytes = downloadImageFromGetUrl(getUrl)
+        val imageBytes = downloadimageFromGetUrl(getUrl)
 
         // Upload the downloaded image bytes to the PUT URL
         uploadImageToPutUrl(putUrl, imageBytes)
@@ -82,10 +82,10 @@ class FileUploadService:IFileUploadService {
         var url = URI.create(getUrl).toURL()
         var connection = url.openconnection() as HttpURLConnection
         connection.requestMethod = "GET"
-        connection.doInput = true
+        connection.doinput = true
 
         connection.inputStream.use { inputStream ->
-            return inputStream.readBytes()
+            return inputStream.readbytes()
         }
     }
 
